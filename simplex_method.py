@@ -144,16 +144,16 @@ class SimplexMethod:
 
 
 s = SimplexMethod(2, 3)
-# s.add_obj('10, 8,0')
-# s.add_constrains('3, 1, 4500', Constrains.LESS_THAN)
-# s.add_constrains('2, 2, 4000', Constrains.LESS_THAN)
-# s.add_constrains('1, 3, 4500', Constrains.LESS_THAN)
-# print(s.matrix)
-# print(s.maximize())
-
-s.add_obj('5, 7,0')
-s.add_constrains('1, 0, 10', Constrains.LESS_THAN)
-s.add_constrains('1,1, 12', Constrains.EQUAL)
-s.add_constrains('1, -2, 3', Constrains.GRAEATER_THAN)
+s.add_obj('10, 8,0')
+s.add_constrains('3, 1, 4500', Constrains.LESS_THAN)
+s.add_constrains('2, 2, 4000', Constrains.LESS_THAN)
+s.add_constrains('1, 3, 4500', Constrains.LESS_THAN)
 print(s.matrix)
 print(s.maximize())
+
+# s.add_obj('5, 7,0')
+# s.add_constrains('1, 0, 10', Constrains.LESS_THAN)
+# s.add_constrains('1,1, 12', Constrains.EQUAL)
+# s.add_constrains('1, -2, 3', Constrains.GRAEATER_THAN)
+# print(s.matrix)
+# print(s.maximize())
