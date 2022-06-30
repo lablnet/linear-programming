@@ -18,7 +18,8 @@ class SimplexMethod:
         self.noOfVars = noOfVars
         self.noOFConstrains = noOFConstrains
         self.addedConstrains = 1
-        self.matrix = np.zeros((noOfVars + 1, noOFConstrains + noOfVars + 1))
+        self.matrix = np.zeros(
+            (noOFConstrains + 1, noOFConstrains + noOfVars + 1))
 
     def convert(self, eq, constrain_type):
         if constrain_type == Constrains.GRAEATER_THAN:
@@ -34,7 +35,7 @@ class SimplexMethod:
         # get position row of matrix
         table = self.matrix[position, :]
         if eqType == "obj":
-            eq = [float(i) for i in eq.split(',')]
+            eq = [round(float(i), 2) for i in eq.split(',')]
         if len(eq) < self.noOfVars:
             raise Exception("Invalid number of variables")
 
@@ -51,7 +52,7 @@ class SimplexMethod:
         self._add(eq, 0)
 
     def add_constrains(self, eq, constrain_type):
-        eq = [float(i) for i in eq.split(',')]
+        eq = [round(float(i), 2) for i in eq.split(',')]
         eq = self.convert(eq, constrain_type)
         self._add(eq, self.addedConstrains, 'constrain')
         self.addedConstrains += 1
@@ -101,6 +102,7 @@ class SimplexMethod:
                 k = self.matrix[i, :]
                 c = self.matrix[i, col]
                 if list(k) != list(pivot_row):
+                    # subtract pivot row from each row and multiply by pivot value
                     table[i, :] = list(k - r * c)
             table[row, :] = r
             self.matrix = table
@@ -111,30 +113,47 @@ class SimplexMethod:
             v.append('x' + str(i+1))
         return v
 
-    def maximize(self):
+    def solve(self):
         while self.check_negative_topmost_row() == True:
             self.pivot(self.locate_pivot()[0], self.locate_pivot()[1])
+            # print(self.matrix)
 
-        lc = len(self.matrix[0, :])
-        lr = len(self.matrix[:, 0])
         i = 0
         var = {}
         for i in range(self.noOfVars):
             col = self.matrix[:, i]
             s = sum(col)
             m = max(col)
+
             if float(s) == float(m):
                 location = np.where(col == m)[0][0]
                 var[self.generate_vars()[i]] = self.matrix[location, -1]
             else:
                 var[self.generate_vars()[i]] = 0
         var['max'] = self.matrix[0, -1]
+        print(self.matrix)
         return var
 
+    def maximize(self):
+        return self.solve()
 
-s = SimplexMethod(2, 2)
-s.add_obj('5,10,0')
-s.add_constrains('2,-1,10', Constrains.LESS_THAN)
-s.add_constrains('1,1,20', Constrains.LESS_THAN)
+    def minimize(self):
+        # multiply first row by -1
+        self.matrix[0, :] = self.matrix[0, :] * -1
+        return self.solve()
+
+
+s = SimplexMethod(2, 3)
+# s.add_obj('10, 8,0')
+# s.add_constrains('3, 1, 4500', Constrains.LESS_THAN)
+# s.add_constrains('2, 2, 4000', Constrains.LESS_THAN)
+# s.add_constrains('1, 3, 4500', Constrains.LESS_THAN)
+# print(s.matrix)
+# print(s.maximize())
+
+s.add_obj('5, 7,0')
+s.add_constrains('1, 0, 10', Constrains.LESS_THAN)
+s.add_constrains('1,1, 12', Constrains.EQUAL)
+s.add_constrains('1, -2, 3', Constrains.GRAEATER_THAN)
 print(s.matrix)
 print(s.maximize())
