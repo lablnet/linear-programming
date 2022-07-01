@@ -12,7 +12,13 @@ jupyter nbconvert notes.ipynb --to $1
 # check if $1 is html.
 if [ "$1" = "html" ]; then
   echo "Renaming index.html to index.html.html"
+  git checkout gh-pages
   mv notes.html index.html
+  git add -A
+  git commit -s -m "update"
+  git push origin gh-pages
+  git checkout main
+  exit 0
 else
   echo "Moving notes.pdf to /exported/notes.pdf"
   mv notes.${1} exported/notes.${1}
