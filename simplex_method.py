@@ -2,7 +2,7 @@ from enum import Enum
 import numpy as np
 
 
-class Constrains(Enum):
+class Constraints(Enum):
     LESS_THAN = 1
     GRAEATER_THAN = 2
     EQUAL = 3
@@ -14,20 +14,20 @@ class Type(Enum):
 
 
 class SimplexMethod:
-    def __init__(self, noOfVars, noOFConstrains):
+    def __init__(self, noOfVars, noOfConstraint):
         self.noOfVars = noOfVars
-        self.noOFConstrains = noOFConstrains
-        self.addedConstrains = 1
+        self.noOfConstraint = noOfConstraint
+        self.totalConstraints = 1
         self.matrix = np.zeros(
-            (noOFConstrains + 1, noOFConstrains + noOfVars + 1))
+            (noOfConstraint + 1, noOfConstraint + noOfVars + 1))
 
     def convert(self, eq, constrain_type):
-        if constrain_type == Constrains.GRAEATER_THAN:
+        if constrain_type == Constraints.GRAEATER_THAN:
             eq = [eq * -1 for eq in eq]
             return eq
-        elif constrain_type == Constrains.EQUAL:
+        elif constrain_type == Constraints.EQUAL:
             return eq
-        elif constrain_type == Constrains.LESS_THAN:
+        elif constrain_type == Constraints.LESS_THAN:
             eq = [eq * 1 for eq in eq]
             return eq
 
@@ -51,11 +51,11 @@ class SimplexMethod:
     def add_obj(self, eq):
         self._add(eq, 0)
 
-    def add_constrains(self, eq, constrain_type):
+    def add_constraints(self, eq, constraint_type):
         eq = [round(float(i), 2) for i in eq.split(',')]
-        eq = self.convert(eq, constrain_type)
-        self._add(eq, self.addedConstrains, 'constrain')
-        self.addedConstrains += 1
+        eq = self.convert(eq, constraint_type)
+        self._add(eq, self.totalConstraints, 'constraint')
+        self.totalConstraints += 1
 
     def check_negative_topmost_row(self):
         # get the first row of matrix
@@ -145,9 +145,9 @@ class SimplexMethod:
 
 s = SimplexMethod(2, 3)
 s.add_obj('10, 8,0')
-s.add_constrains('3, 1, 4500', Constrains.LESS_THAN)
-s.add_constrains('2, 2, 4000', Constrains.LESS_THAN)
-s.add_constrains('1, 3, 4500', Constrains.LESS_THAN)
+s.add_constraints('3, 1, 4500', Constraints.LESS_THAN)
+s.add_constraints('2, 2, 4000', Constraints.LESS_THAN)
+s.add_constraints('1, 3, 4500', Constraints.LESS_THAN)
 print(s.matrix)
 print(s.maximize())
 
