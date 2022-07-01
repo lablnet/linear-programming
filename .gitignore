@@ -150,4 +150,4 @@ dmypy.json
 hs_err_pid*
 replay_pid*
 
-test.py
+test/
