@@ -6,7 +6,14 @@ if [ -z "$1" ]; then
 fi
 
 # export
+echo "Exporting"
 jupyter nbconvert notes.ipynb --to $1
 
-# move expoted file to exported directory
-mv notes.${1} exported/notes.${1}
+# check if $1 is html.
+if [ "$1" = "html" ]; then
+  echo "Renaming index.html to index.html.html"
+  mv notes.html index.html
+else
+  echo "Moving notes.pdf to /exported/notes.pdf"
+  mv notes.${1} exported/notes.${1}
+fi
